@@ -6,10 +6,10 @@ const CarouselContext = React.createContext();
 
 // This is the Title sub-component, which is a consumer of the Article Context
 const Img = props => {
-  console.log(props);
   return (
     <CarouselContext.Consumer>
       {({ setImgRef }) => {
+        console.log(setImgRef);
         return <div ref={setImgRef}>{props.children}</div>;
       }}
     </CarouselContext.Consumer>
@@ -20,6 +20,7 @@ const Buttons = () => {
   return (
     <CarouselContext.Consumer>
       {({ scroll }) => {
+        console.log("here");
         return (
           <React.Fragment>
             <button className="left" onClick={() => scroll("left")}>
@@ -57,46 +58,48 @@ class Carousel extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      value: {
-        setImgRef: this.setImgRef,
-        scrollTo: this.scrollTo,
-        scroll: this.scroll,
-        imgRefs: this.imgRefs
-      },
-      imgRefs: []
-    };
-
     this.imgRefs = [];
     this.carouselRef = React.createRef();
+
+    this.setImgRefBound = this.setImgRef.bind(this);
+    this.scrollToBound = this.scrollTo.bind(this);
+    this.scrollBound = this.scroll.bind(this);
+
+    this.state = {
+      value: {
+        setImgRef: this.setImgRefBound,
+        scrollTo: this.scrollToBound,
+        scroll: this.scrollBound,
+        imgRefs: this.imgRefs
+      }
+    };
   }
 
   componentDidMount() {
     this.setState({
       value: {
-        setImgRef: this.setImgRef,
-        scrollTo: this.scrollTo,
-        scroll: this.scroll,
+        setImgRef: this.setImgRefBound,
+        scrollTo: this.scrollToBound,
+        scroll: this.scrollBound,
         imgRefs: this.imgRefs
       }
     });
   }
 
-  setImgRef = img => {
+  setImgRef(img) {
     this.imgRefs.push(img);
-    this.setState({ imgRefs: this.imgRefs });
-  };
+  }
 
-  scrollTo = img => {
+  scrollTo(img) {
     this.carouselRef.current.scrollLeft = img.offsetLeft;
-  };
+  }
 
-  scroll = dir => {
-    const width = this.state.imgRefs[1].offsetLeft;
+  scroll(dir) {
+    const width = this.state.value.imgRefs[1].offsetLeft;
     dir === "left"
       ? (this.carouselRef.current.scrollLeft -= width)
       : (this.carouselRef.current.scrollLeft += width);
-  };
+  }
 
   render() {
     return (
