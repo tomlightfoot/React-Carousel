@@ -6,15 +6,13 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Carousel>
-          <Carousel.Img>
+        <Carousel buttons={true} indicators={true}>
+          <div ref={React.createRef()}>
             <img src="https://via.placeholder.com/500" loading="lazy" alt="" />
-          </Carousel.Img>
-          <Carousel.Img>
-            <img src="https://via.placeholder.com/501" loading="lazy" alt="" />
-          </Carousel.Img>
-          <Carousel.Buttons />
-          <Carousel.Indicators />
+          </div>
+          <div ref={React.createRef()}>
+            <img src="https://via.placeholder.com/500" loading="lazy" alt="" />
+          </div>
         </Carousel>
       </div>
     );
