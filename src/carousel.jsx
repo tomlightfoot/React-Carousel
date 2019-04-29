@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import "./styles.css";
 
 class Carousel extends Component {
@@ -10,14 +11,25 @@ class Carousel extends Component {
     };
 
     this.carouselRef = React.createRef();
-    this.setActiveIndicator = this.setActiveIndicator.bind(this);
-    this.scrollTo = this.scrollTo.bind(this);
     this.scroll = this.scroll.bind(this);
+    this.scrollTo = this.scrollTo.bind(this);
+    this.setActiveIndicator = this.setActiveIndicator.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
     this.offsetWidth = 0;
   }
 
   componentDidMount() {
     this.offsetWidth = this.props.children[0].ref.current.offsetWidth;
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    this.offsetWidth = this.props.children[0].ref.current.offsetWidth;
+    this.carouselRef.current.scrollLeft = 0;
   }
 
   scroll(dir) {
@@ -31,10 +43,13 @@ class Carousel extends Component {
   }
 
   setActiveIndicator() {
-    const index = this.carouselRef.current.scrollLeft / this.offsetWidth;
-    if (Number.isInteger(index)) {
-      this.setState({ index: index });
-    }
+    this.setState({
+      index: Math.round(this.carouselRef.current.scrollLeft / this.offsetWidth)
+    });
+  }
+
+  test(e) {
+    console.log(e.pageX);
   }
 
   render() {
@@ -46,6 +61,7 @@ class Carousel extends Component {
           className="carousel mb-0"
           ref={this.carouselRef}
           onScroll={this.setActiveIndicator}
+          draggable={true}
         >
           {children}
           {buttons && (
@@ -58,7 +74,6 @@ class Carousel extends Component {
               </button>
             </React.Fragment>
           )}
-
           {indicators && (
             <ol className="carousel-indicators">
               {children.map((img, index) => {
@@ -79,5 +94,10 @@ class Carousel extends Component {
     );
   }
 }
+
+Carousel.propTypes = {
+  buttons: PropTypes.bool,
+  indicators: PropTypes.bool
+};
 
 export default Carousel;
