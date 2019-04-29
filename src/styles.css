@@ -58,7 +58,7 @@
   text-align: center;
 }
 
-.carousel-indicators li {
+.carousel-indicator {
   display: inline-block;
   width: 10px;
   height: 10px;
