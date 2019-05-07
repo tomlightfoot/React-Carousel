@@ -42,22 +42,16 @@ class Carousel extends Component {
   }
 
   setActiveIndicator() {
-    this.state.index <
-      Math.round(
-        this.carouselRef.current.scrollLeft /
-          this.props.children[0].ref.current.offsetWidth
-      ) && this.setState({ translate: this.state.translate - 14 });
-    this.state.index >
-      Math.round(
-        this.carouselRef.current.scrollLeft /
-          this.props.children[0].ref.current.offsetWidth
-      ) && this.setState({ translate: this.state.translate + 14 });
+    const scrollPosition =
+      this.carouselRef.current.scrollLeft /
+      this.props.children[0].ref.current.offsetWidth;
+    this.state.index < Math.round(scrollPosition) &&
+      this.setState({ translate: this.state.translate - 14 });
+    this.state.index > Math.round(scrollPosition) &&
+      this.setState({ translate: this.state.translate + 14 });
 
     this.setState({
-      index: Math.round(
-        this.carouselRef.current.scrollLeft /
-          this.props.children[0].ref.current.offsetWidth
-      )
+      index: Math.round(scrollPosition)
     });
   }
 

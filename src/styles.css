@@ -68,32 +68,32 @@
 }
 
 .large {
-  transition: 1s;
+  transition: 0.8s;
   transform: scale(0.9);
 }
 
 .medium {
-  transition: 1s;
+  transition: 0.8s;
   transform: scale(0.7);
 }
 
 .small {
-  transition: 1s;
+  transition: 0.8s;
   transform: scale(0.5);
 }
 
 .ex-small {
-  transition: 1s;
+  transition: 0.8s;
   transform: scale(0.3);
 }
 
 .active {
-  transition: 1s;
+  transition: 0.8s;
   background-color: white;
   margin: 1px 2px;
 }
 
 .inactive {
-  transition: 1s;
+  transition: 0.8s;
   transform: scale(0);
 }
