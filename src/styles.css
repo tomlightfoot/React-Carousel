@@ -1,17 +1,14 @@
 .carouselContainer {
   position: relative;
   box-sizing: border-box;
-  height: 300px;
-  width: 500px;
+  overflow: auto;
+  display: inline-flex;
 }
 
 .carousel {
   position: static;
   display: flex;
-  width: 100%;
-  height: 100%;
-  max-height: 600px;
-  min-height: 176px;
+  max-height: 300px;
   overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -26,10 +23,10 @@
 }
 
 .carouselContainer .carousel div {
+  align-content: stretch;
   flex: 1 0 100%;
   scroll-snap-align: center;
   max-width: 100%;
-  height: auto;
 }
 
 .left {
@@ -48,17 +45,17 @@
 
 .carousel-indicators {
   position: absolute;
-  bottom: 10px;
   left: 50%;
+  bottom: 10px;
   z-index: 15;
-  width: 60%;
-  margin-left: -30%;
+  margin: auto;
   padding-left: 0;
   list-style: none;
-  text-align: center;
+  white-space: nowrap;
 }
 
 .carousel-indicator {
+  margin: auto;
   display: inline-block;
   width: 10px;
   height: 10px;
@@ -70,6 +67,33 @@
   background-color: rgba(0, 0, 0, 0);
 }
 
+.large {
+  transition: 1s;
+  transform: scale(0.9);
+}
+
+.medium {
+  transition: 1s;
+  transform: scale(0.7);
+}
+
+.small {
+  transition: 1s;
+  transform: scale(0.5);
+}
+
+.ex-small {
+  transition: 1s;
+  transform: scale(0.3);
+}
+
 .active {
+  transition: 1s;
   background-color: white;
+  margin: 1px 2px;
+}
+
+.inactive {
+  transition: 1s;
+  transform: scale(0);
 }

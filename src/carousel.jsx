@@ -7,7 +7,8 @@ class Carousel extends Component {
     super(props);
 
     this.state = {
-      index: 0
+      index: 0,
+      translate: 0
     };
 
     this.carouselRef = React.createRef();
@@ -15,11 +16,9 @@ class Carousel extends Component {
     this.scrollTo = this.scrollTo.bind(this);
     this.setActiveIndicator = this.setActiveIndicator.bind(this);
     this.updateDimensions = this.updateDimensions.bind(this);
-    this.offsetWidth = 0;
   }
 
   componentDidMount() {
-    this.offsetWidth = this.props.children[0].ref.current.offsetWidth;
     window.addEventListener("resize", this.updateDimensions);
   }
 
@@ -28,28 +27,38 @@ class Carousel extends Component {
   }
 
   updateDimensions() {
-    this.offsetWidth = this.props.children[0].ref.current.offsetWidth;
     this.carouselRef.current.scrollLeft = 0;
   }
 
   scroll(dir) {
     dir === "left"
-      ? (this.carouselRef.current.scrollLeft -= this.offsetWidth)
-      : (this.carouselRef.current.scrollLeft += this.offsetWidth);
+      ? (this.carouselRef.current.scrollLeft -= this.props.children[0].ref.current.offsetWidth)
+      : (this.carouselRef.current.scrollLeft += this.props.children[0].ref.current.offsetWidth);
   }
 
   scrollTo(index) {
-    this.carouselRef.current.scrollLeft = parseInt(this.offsetWidth) * index;
+    this.carouselRef.current.scrollLeft =
+      parseInt(this.props.children[0].ref.current.offsetWidth) * index;
   }
 
   setActiveIndicator() {
-    this.setState({
-      index: Math.round(this.carouselRef.current.scrollLeft / this.offsetWidth)
-    });
-  }
+    this.state.index <
+      Math.round(
+        this.carouselRef.current.scrollLeft /
+          this.props.children[0].ref.current.offsetWidth
+      ) && this.setState({ translate: this.state.translate - 14 });
+    this.state.index >
+      Math.round(
+        this.carouselRef.current.scrollLeft /
+          this.props.children[0].ref.current.offsetWidth
+      ) && this.setState({ translate: this.state.translate + 14 });
 
-  test(e) {
-    console.log(e.pageX);
+    this.setState({
+      index: Math.round(
+        this.carouselRef.current.scrollLeft /
+          this.props.children[0].ref.current.offsetWidth
+      )
+    });
   }
 
   render() {
@@ -61,7 +70,6 @@ class Carousel extends Component {
           className="carousel mb-0"
           ref={this.carouselRef}
           onScroll={this.setActiveIndicator}
-          draggable={true}
         >
           {children}
           {buttons && (
@@ -75,14 +83,34 @@ class Carousel extends Component {
             </React.Fragment>
           )}
           {indicators && (
-            <ol className="carousel-indicators">
+            <ol
+              className="carousel-indicators"
+              style={{
+                transform: "translateX(" + this.state.translate + "px)",
+                transition: "0.6s"
+              }}
+            >
               {children.map((img, index) => {
                 return (
                   <li
                     className={
                       "carousel-indicator " +
-                      (this.state.index === index ? "active" : "")
+                      (this.state.index === index ? "active " : "") +
+                      (Math.abs(this.state.index - index) === 1
+                        ? "large"
+                        : "") +
+                      (Math.abs(this.state.index - index) === 2
+                        ? "medium"
+                        : "") +
+                      (Math.abs(this.state.index - index) === 3
+                        ? "small"
+                        : "") +
+                      (Math.abs(this.state.index - index) === 4
+                        ? "ex-small"
+                        : "") +
+                      (Math.abs(this.state.index - index) > 4 ? "inactive" : "")
                     }
+                    key={index}
                     onClick={() => this.scrollTo(index)}
                   />
                 );
