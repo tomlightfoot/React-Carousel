@@ -1,16 +1,17 @@
 .carouselContainer {
   position: relative;
-  box-sizing: border-box;
-  overflow: auto;
-  display: inline-flex;
+  text-align: center;
 }
 
 .carousel {
+  background-color: black;
   position: static;
+  max-height: 600px;
+  min-height: 176px;
   display: flex;
-  max-height: 300px;
   overflow-x: scroll;
   overflow-y: hidden;
+  scroll-snap-align: start;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -23,6 +24,7 @@
 }
 
 .carouselContainer .carousel div {
+  align-self: center;
   align-content: stretch;
   flex: 1 0 100%;
   scroll-snap-align: center;
@@ -30,70 +32,84 @@
 }
 
 .left {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  color: white;
+  padding: 0.3em 0.3em 0 0.3em;
   position: absolute;
-  top: 50%;
   left: 1em;
-  transform: translateY(50%);
+  top: 45%;
+  margin: auto;
 }
 
 .right {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  padding: 0.3em 0.3em 0 0.3em;
+  color: white;
   position: absolute;
-  top: 50%;
   right: 1em;
-  transform: translateY(50%);
+  top: 45%;
+  margin: auto;
 }
 
-.carousel-indicators {
+.right:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.left:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.indicators {
   position: absolute;
-  left: 50%;
-  bottom: 10px;
-  z-index: 15;
+  left: 49%;
+  bottom: 2em;
+  z-index: 1000;
   margin: auto;
   padding-left: 0;
   list-style: none;
   white-space: nowrap;
 }
 
-.carousel-indicator {
+.indicator {
   margin: auto;
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin: 1px;
-  text-indent: -999px;
+  width: 0.6em;
+  height: 0.6em;
+  margin: 0.2em;
   border: 1px solid #fff;
-  border-radius: 10px;
+  border-radius: 1em;
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0);
 }
 
-.large {
+.large-ind {
   transition: 0.8s;
   transform: scale(0.9);
 }
 
-.medium {
+.medium-ind {
   transition: 0.8s;
   transform: scale(0.7);
 }
 
-.small {
+.small-ind {
   transition: 0.8s;
   transform: scale(0.5);
 }
 
-.ex-small {
+.ex-small-ind {
   transition: 0.8s;
   transform: scale(0.3);
 }
 
-.active {
+.active-ind {
   transition: 0.8s;
   background-color: white;
-  margin: 1px 2px;
 }
 
-.inactive {
+.inactive-ind {
   transition: 0.8s;
   transform: scale(0);
 }
