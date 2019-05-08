@@ -15,19 +15,20 @@ class Carousel extends Component {
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.setActiveIndicator = this.setActiveIndicator.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener(
+      "resize",
+      () => (this.carouselRef.current.scrollLeft = 0)
+    );
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
-
-  updateDimensions() {
-    this.carouselRef.current.scrollLeft = 0;
+    window.removeEventListener(
+      "resize",
+      () => (this.carouselRef.current.scrollLeft = 0)
+    );
   }
 
   scroll(dir) {
