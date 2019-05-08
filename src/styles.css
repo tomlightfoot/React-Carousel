@@ -73,7 +73,6 @@
 }
 
 .indicator {
-  margin: auto;
   display: inline-block;
   width: 0.6em;
   height: 0.6em;
@@ -107,6 +106,7 @@
 .active-ind {
   transition: 0.8s;
   background-color: white;
+  transform: scale(0.9999);
 }
 
 .inactive-ind {
