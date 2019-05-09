@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./styles.css";
 
 class Carousel extends Component {
   constructor(props) {
@@ -42,7 +41,7 @@ class Carousel extends Component {
       parseInt(this.props.children[0].ref.current.offsetWidth) * index;
   }
 
-  setActiveIndicator() {
+  setActiveIndicator(e) {
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
       this.props.children[0].ref.current.offsetWidth;
@@ -74,6 +73,7 @@ class Carousel extends Component {
               <svg
                 aria-hidden="true"
                 role="presentation"
+                fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -88,6 +88,7 @@ class Carousel extends Component {
               <svg
                 aria-hidden="true"
                 role="presentation"
+                fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
