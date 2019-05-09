@@ -17,17 +17,13 @@ class Carousel extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener(
-      "resize",
-      () => (this.carouselRef.current.scrollLeft = 0)
-    );
+    window.addEventListener("resize", () => {
+      this.carouselRef.current.scrollLeft = 0;
+    });
   }
 
   componentWillUnmount() {
-    window.removeEventListener(
-      "resize",
-      () => (this.carouselRef.current.scrollLeft = 0)
-    );
+    window.removeEventListener("resize");
   }
 
   scroll(dir) {
@@ -41,10 +37,11 @@ class Carousel extends Component {
       parseInt(this.props.children[0].ref.current.offsetWidth) * index;
   }
 
-  setActiveIndicator(e) {
+  setActiveIndicator() {
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
       this.props.children[0].ref.current.offsetWidth;
+    this.state.index === 0 && this.setState({ translate: 0 });
     this.state.index < Math.round(scrollPosition) &&
       this.setState({ translate: this.state.translate - 16 });
     this.state.index > Math.round(scrollPosition) &&
