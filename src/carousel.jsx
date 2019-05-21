@@ -11,21 +11,24 @@ class Carousel extends Component {
     };
 
     this.carouselRef = React.createRef();
+    this.resetCarousel = this.resetCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.setActiveIndicator = this.setActiveIndicator.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("resize", () => {
-      this.setState(() => ({ index: 0, translate: 0 }));
-      this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
-    });
+    window.addEventListener("resize", this.resetCarousel());
     this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize");
+    window.removeEventListener("resize", this.resetCarousel());
+  }
+
+  resetCarousel() {
+    this.setState(() => ({ index: 0, translate: 0 }));
+    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   scroll(dir) {
@@ -51,7 +54,6 @@ class Carousel extends Component {
         translate: -((this.props.children.length - 2) * 16)
       }));
       overRide = true;
-      console.log("here");
     }
 
     if (scrollPosition === this.props.children.length) {
