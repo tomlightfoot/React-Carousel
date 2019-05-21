@@ -9,7 +9,7 @@ class App extends Component {
       <div>
         <Carousel buttons={true} indicators={true}>
           <div ref={React.createRef()}>
-            <img src="https://picsum.photos/800/600" loading="lazy" alt="" />
+            <img src="https://picsum.photos/801/600" loading="lazy" alt="" />
           </div>
           <div ref={React.createRef()}>
             <img src="https://picsum.photos/800/601" loading="lazy" alt="" />
