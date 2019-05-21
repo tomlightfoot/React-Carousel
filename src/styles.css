@@ -85,32 +85,32 @@
 }
 
 .large-ind {
-  transition: 0.6s;
+  transition: 2s;
   transform: scale(0.9);
 }
 
 .medium-ind {
-  transition: 0.6s;
+  transition: 2s;
   transform: scale(0.7);
 }
 
 .small-ind {
-  transition: 0.6s;
+  transition: 2s;
   transform: scale(0.5);
 }
 
 .ex-small-ind {
-  transition: 0.6s;
+  transition: 2s;
   transform: scale(0.3);
 }
 
 .active-ind {
-  transition: 0.6s;
+  transition: 2s;
   background-color: white;
   transform: scale(0.9999);
 }
 
 .inactive-ind {
-  transition: 0.6s;
+  transition: 2s;
   transform: scale(0);
 }

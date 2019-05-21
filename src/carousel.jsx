@@ -18,12 +18,12 @@ class Carousel extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.resetCarousel());
+    window.addEventListener("resize", this.resetCarousel);
     this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.resetCarousel());
+    window.removeEventListener("resize", this.resetCarousel);
   }
 
   resetCarousel() {
@@ -127,7 +127,7 @@ class Carousel extends Component {
             className="indicators"
             style={{
               transform: "translateX(" + this.state.translate + "px)",
-              transition: "0.6s"
+              transition: "2s"
             }}
           >
             {children.map((img, index) => {
