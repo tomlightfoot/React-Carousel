@@ -7,14 +7,14 @@ class Carousel extends Component {
 
     this.state = {
       index: 0,
-      translate: 0
+      translate: 222
     };
 
     this.carouselRef = React.createRef();
     this.resetCarousel = this.resetCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
-    this.setActiveIndicator = this.setActiveIndicator.bind(this);
+    this.handleScrolling = this.handleScrolling.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +42,7 @@ class Carousel extends Component {
       parseInt(this.props.children[0].ref.current.offsetWidth) * index;
   }
 
-  setActiveIndicator() {
+  handleScrolling() {
     let overRide = false;
     let scrollPosition =
       this.carouselRef.current.scrollLeft /
@@ -50,28 +50,25 @@ class Carousel extends Component {
       1;
     if (scrollPosition === -1) {
       this.scrollTo(this.props.children.length);
-      this.setState(() => ({
-        translate: -((this.props.children.length - 2) * 16)
-      }));
+      this.setState({ translate: -(this.props.children.length - 4) * 111 });
       overRide = true;
     }
 
     if (scrollPosition === this.props.children.length) {
       this.scrollTo(1);
-      this.setState(() => ({ translate: 0 }));
+      this.setState({ translate: 111 });
       overRide = true;
     }
 
     if (!overRide) {
       this.state.index < Math.round(scrollPosition) &&
-        this.setState({ translate: this.state.translate - 16 });
+        this.setState({ translate: this.state.translate - 111 });
       this.state.index > Math.round(scrollPosition) &&
-        this.setState({ translate: this.state.translate + 16 });
+        this.setState({ translate: this.state.translate + 111 });
+      this.setState({
+        index: Math.round(scrollPosition)
+      });
     }
-
-    this.setState({
-      index: Math.round(scrollPosition)
-    });
   }
 
   render() {
@@ -82,7 +79,7 @@ class Carousel extends Component {
         <div
           className="carousel mb-0"
           ref={this.carouselRef}
-          onScroll={this.setActiveIndicator}
+          onScroll={this.handleScrolling}
         >
           {children[children.length - 1]}
           {children}
@@ -123,35 +120,19 @@ class Carousel extends Component {
           </React.Fragment>
         )}
         {indicators && (
-          <ol
-            className="indicators"
-            style={{
-              transform: "translateX(" + this.state.translate + "px)",
-              transition: "2s"
-            }}
-          >
+          <ol className="indicators">
             {children.map((img, index) => {
               return (
                 <li
-                  className={
-                    "indicator " +
-                    (this.state.index === index ? "active-ind " : "") +
-                    (Math.abs(this.state.index - index) === 1
-                      ? "large-ind"
-                      : "") +
-                    (Math.abs(this.state.index - index) === 2
-                      ? "medium-ind"
-                      : "") +
-                    (Math.abs(this.state.index - index) === 3
-                      ? "small-ind"
-                      : "") +
-                    (Math.abs(this.state.index - index) === 4
-                      ? "ex-small-ind"
-                      : "") +
-                    (Math.abs(this.state.index - index) > 4
-                      ? "inactive-ind"
-                      : "")
-                  }
+                  className="indicator"
+                  style={{
+                    transform: `translateX(${this.state.translate}%)`,
+                    transformStyle: "ease-in",
+                    backgroundImage: `url(${img.ref.current &&
+                      img.ref.current.children[0].src})`,
+                    backgroundSize: "cover",
+                    transition: "0.8s"
+                  }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}
                 />
