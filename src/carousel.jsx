@@ -7,10 +7,13 @@ class Carousel extends Component {
 
     this.state = {
       index: 0,
-      translate: 222
+      overRide: false,
+      translate: 0,
+      translation: 0
     };
 
     this.carouselRef = React.createRef();
+    this.indicatorsRef = React.createRef();
     this.resetCarousel = this.resetCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
@@ -20,6 +23,16 @@ class Carousel extends Component {
   componentDidMount() {
     window.addEventListener("resize", this.resetCarousel);
     this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
+    this.setState(() => ({
+      width: this.carouselRef.current.offsetWidth,
+      translate:
+        (parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
+          5) *
+        2,
+      translation:
+        parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
+        5
+    }));
   }
 
   componentWillUnmount() {
@@ -27,7 +40,16 @@ class Carousel extends Component {
   }
 
   resetCarousel() {
-    this.setState(() => ({ index: 0, translate: 0 }));
+    this.setState(() => ({
+      index: 0,
+      translate:
+        (parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
+          5) *
+        2,
+      translation:
+        parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
+        5
+    }));
     this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
@@ -38,43 +60,53 @@ class Carousel extends Component {
   }
 
   scrollTo(index) {
+    console.log(this.state.index - index + 1);
     this.carouselRef.current.scrollLeft =
       parseInt(this.props.children[0].ref.current.offsetWidth) * index;
+    this.setState(() => ({
+      overRide: true,
+      translate:
+        this.state.translate +
+        this.state.translation * (this.state.index - index + 1)
+    }));
   }
 
   handleScrolling() {
-    let overRide = false;
-    let scrollPosition =
+    let overRide = this.state.overRide;
+    const scrollPosition =
       this.carouselRef.current.scrollLeft /
         this.props.children[0].ref.current.offsetWidth -
       1;
     if (scrollPosition === -1) {
       this.scrollTo(this.props.children.length);
       this.setState({
-        translate: -(this.props.children.length - 4) * 111
+        translate: -(this.props.children.length - 4) * this.state.translation
       });
       overRide = true;
     }
 
     if (scrollPosition === this.props.children.length) {
       this.scrollTo(1);
-      this.setState({ translate: 111 });
+      this.setState({ translate: this.state.translation });
       overRide = true;
     }
 
     if (!overRide) {
+      console.log("here");
       this.state.index < Math.round(scrollPosition) &&
         this.setState({
-          translate: this.state.translate - 111
+          translate: this.state.translate - this.state.translation
         });
       this.state.index > Math.round(scrollPosition) &&
         this.setState({
-          translate: this.state.translate + 111
+          translate: this.state.translate + this.state.translation
         });
-      this.setState({
-        index: Math.round(scrollPosition)
-      });
     }
+
+    this.setState({
+      index: Math.round(scrollPosition),
+      overRide: false
+    });
   }
 
   render() {
@@ -132,11 +164,10 @@ class Carousel extends Component {
                 <li
                   className="indicator"
                   style={{
-                    transform: `translateX(${this.state.translate}%)`,
+                    transform: `translateX(${this.state.translate}px`,
                     backgroundImage: `url(${img.ref.current &&
                       img.ref.current.children[0].src})`,
-                    backgroundSize: "cover",
-                    transition: "0.6s"
+                    opacity: `${this.state.index === index ? "1" : ""}`
                   }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}
