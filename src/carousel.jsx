@@ -50,7 +50,9 @@ class Carousel extends Component {
       1;
     if (scrollPosition === -1) {
       this.scrollTo(this.props.children.length);
-      this.setState({ translate: -(this.props.children.length - 4) * 111 });
+      this.setState({
+        translate: -(this.props.children.length - 4) * 111
+      });
       overRide = true;
     }
 
@@ -62,9 +64,13 @@ class Carousel extends Component {
 
     if (!overRide) {
       this.state.index < Math.round(scrollPosition) &&
-        this.setState({ translate: this.state.translate - 111 });
+        this.setState({
+          translate: this.state.translate - 111
+        });
       this.state.index > Math.round(scrollPosition) &&
-        this.setState({ translate: this.state.translate + 111 });
+        this.setState({
+          translate: this.state.translate + 111
+        });
       this.setState({
         index: Math.round(scrollPosition)
       });
@@ -120,18 +126,17 @@ class Carousel extends Component {
           </React.Fragment>
         )}
         {indicators && (
-          <ol className="indicators">
+          <ol className="indicators" ref={this.indicatorsRef}>
             {children.map((img, index) => {
               return (
                 <li
                   className="indicator"
                   style={{
                     transform: `translateX(${this.state.translate}%)`,
-                    transformStyle: "ease-in",
                     backgroundImage: `url(${img.ref.current &&
                       img.ref.current.children[0].src})`,
                     backgroundSize: "cover",
-                    transition: "0.8s"
+                    transition: "0.6s"
                   }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}
