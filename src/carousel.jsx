@@ -60,7 +60,6 @@ class Carousel extends Component {
   }
 
   scrollTo(index) {
-    console.log(this.state.index - index + 1);
     this.carouselRef.current.scrollLeft =
       parseInt(this.props.children[0].ref.current.offsetWidth) * index;
     this.setState(() => ({
@@ -92,7 +91,6 @@ class Carousel extends Component {
     }
 
     if (!overRide) {
-      console.log("here");
       this.state.index < Math.round(scrollPosition) &&
         this.setState({
           translate: this.state.translate - this.state.translation

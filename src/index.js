@@ -7,7 +7,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Carousel buttons={true} indicators={true}>
+        <Carousel buttons={true} indicators={true} counter>
           <div ref={React.createRef()}>
             <img src="https://picsum.photos/801/600" loading="lazy" alt="" />
           </div>
