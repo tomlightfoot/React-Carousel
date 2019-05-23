@@ -162,10 +162,13 @@ class Carousel extends Component {
                 <li
                   className="indicator"
                   style={{
-                    transform: `translateX(${this.state.translate}px`,
+                    transform: `translateX(${
+                      children.length > 5 ? this.state.translate : "0"
+                    }px`,
                     backgroundImage: `url(${img.ref.current &&
                       img.ref.current.children[0].src})`,
-                    opacity: `${this.state.index === index ? "1" : ""}`
+                    opacity: `${this.state.index === index ? "1" : ""}`,
+                    Animation: "indicatorsMove 1s"
                   }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}
@@ -176,7 +179,12 @@ class Carousel extends Component {
         )}
         {counter && (
           <div className="mt-2 test">
-            {this.state.index + 1}/{children.length}
+            {(children.length === this.state.index
+              ? children.length - 1
+              : this.state.index < 1
+              ? 0
+              : this.state.index) + 1}
+            /{children.length}
           </div>
         )}
       </div>
