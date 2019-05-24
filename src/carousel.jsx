@@ -13,55 +13,39 @@ class Carousel extends Component {
     };
 
     this.carouselRef = React.createRef();
-    this.indicatorsRef = React.createRef();
-    this.resetCarousel = this.resetCarousel.bind(this);
+    this.setCarousel = this.setCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.handleScrolling = this.handleScrolling.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.resetCarousel);
-    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
-    this.setState(() => ({
-      width: this.carouselRef.current.offsetWidth,
-      translate:
-        (parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
-          5) *
-        2,
-      translation:
-        parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
-        5
-    }));
+    window.addEventListener("resize", this.setCarousel);
+    this.setCarousel();
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.resetCarousel);
+    window.removeEventListener("resize", this.setCarousel);
   }
 
-  resetCarousel() {
+  setCarousel() {
     this.setState(() => ({
       index: 0,
-      translate:
-        (parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
-          5) *
-        2,
-      translation:
-        parseFloat(window.getComputedStyle(this.indicatorsRef.current).width) /
-        5
+      translate: (this.carouselRef.current.offsetWidth / 7) * 3,
+      translation: this.carouselRef.current.offsetWidth / 7,
+      scrollLeft: this.carouselRef.current.offsetWidth
     }));
-    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   scroll(dir) {
     dir === "left"
-      ? (this.carouselRef.current.scrollLeft -= this.props.children[0].ref.current.offsetWidth)
-      : (this.carouselRef.current.scrollLeft += this.props.children[0].ref.current.offsetWidth);
+      ? (this.carouselRef.current.scrollLeft -= this.carouselRef.current.offsetWidth)
+      : (this.carouselRef.current.scrollLeft += this.carouselRef.current.offsetWidth);
   }
 
   scrollTo(index) {
     this.carouselRef.current.scrollLeft =
-      parseInt(this.props.children[0].ref.current.offsetWidth) * index;
+      parseInt(this.carouselRef.current.offsetWidth) * index;
     this.setState(() => ({
       overRide: true,
       translate:
@@ -74,19 +58,24 @@ class Carousel extends Component {
     let overRide = this.state.overRide;
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
-        this.props.children[0].ref.current.offsetWidth -
+        this.carouselRef.current.offsetWidth -
       1;
     if (scrollPosition === -1) {
-      this.scrollTo(this.props.children.length);
+      this.scrollTo(this.props.imgs.length);
       this.setState({
-        translate: -(this.props.children.length - 4) * this.state.translation
+        translate: -(this.props.imgs.length - 5) * this.state.translation
       });
       overRide = true;
     }
 
-    if (scrollPosition === this.props.children.length) {
+    //Number.isInteger(this.carouselRef.current.scrollLeft / this.props.imgs[0].ref.current.offsetWidth) &&
+    //  trackingHelpers.track(null, 'scroll', 'Carousel', `imgs ${scrollPosition + 1}`)
+
+    if (scrollPosition === this.props.imgs.length) {
       this.scrollTo(1);
-      this.setState({ translate: this.state.translation });
+      this.setState({
+        translate: (this.carouselRef.current.offsetWidth / 7) * 2
+      });
       overRide = true;
     }
 
@@ -108,18 +97,35 @@ class Carousel extends Component {
   }
 
   render() {
-    const { children, counter, buttons, indicators } = this.props;
-
+    const { imgs, counter, buttons, indicators } = this.props;
     return (
       <div className="carouselContainer">
         <div
           className="carousel mb-0"
-          ref={this.carouselRef}
           onScroll={this.handleScrolling}
+          ref={this.carouselRef}
         >
-          {children[children.length - 1]}
-          {children}
-          {children[0]}
+          <img src={imgs[imgs.length - 1].src} />
+          {imgs.map(img => {
+            return (
+              <img
+                onLoad={() => {
+                  this.scrollTo(1);
+                }}
+                src={img.src}
+              />
+            );
+          })}
+          <img src={imgs[0].src} />
+          {counter && (
+            <div className="counter">
+              {`${(imgs.length === this.state.index
+                ? imgs.length - 1
+                : this.state.index < 1
+                ? 0
+                : this.state.index) + 1} of ${imgs.length}`}
+            </div>
+          )}
         </div>
         {buttons && (
           <React.Fragment>
@@ -157,16 +163,15 @@ class Carousel extends Component {
         )}
         {indicators && (
           <ol className="indicators" ref={this.indicatorsRef}>
-            {children.map((img, index) => {
+            {imgs.map((img, index) => {
               return (
                 <li
                   className="indicator"
                   style={{
                     transform: `translateX(${
-                      children.length > 5 ? this.state.translate : "0"
+                      imgs.length > 5 ? this.state.translate : "0"
                     }px`,
-                    backgroundImage: `url(${img.ref.current &&
-                      img.ref.current.children[0].src})`,
+                    backgroundImage: `url(${img.src})`,
                     opacity: `${this.state.index === index ? "1" : ""}`,
                     Animation: "indicatorsMove 1s"
                   }}
@@ -176,16 +181,6 @@ class Carousel extends Component {
               );
             })}
           </ol>
-        )}
-        {counter && (
-          <div className="mt-2 test">
-            {(children.length === this.state.index
-              ? children.length - 1
-              : this.state.index < 1
-              ? 0
-              : this.state.index) + 1}
-            /{children.length}
-          </div>
         )}
       </div>
     );
