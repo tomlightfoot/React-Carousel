@@ -1,6 +1,8 @@
 .carouselContainer {
   position: relative;
   text-align: center;
+  line-height: 1.5;
+  font-size: 0.8em;
 }
 
 .carousel {
@@ -23,8 +25,14 @@
   align-self: center;
   align-content: stretch;
   flex: 1 0 100%;
-  scroll-snap-align: center;
   max-width: 100%;
+}
+
+.carouselContainer .carousel .videoContainer {
+  scroll-snap-align: center;
+  flex: 1 0 100%;
+  max-width: 100%;
+  padding-bottom: 19px;
 }
 
 .left {

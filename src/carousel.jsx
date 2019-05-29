@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Youtube from "react-youtube";
+
+const videos = [];
 
 class Carousel extends Component {
   constructor(props) {
@@ -9,7 +12,8 @@ class Carousel extends Component {
       index: 0,
       overRide: false,
       translate: 0,
-      translation: 0
+      translation: 0,
+      videos: []
     };
 
     this.carouselRef = React.createRef();
@@ -32,9 +36,9 @@ class Carousel extends Component {
     this.setState(() => ({
       index: 0,
       translate: (this.carouselRef.current.offsetWidth / 7) * 3,
-      translation: this.carouselRef.current.offsetWidth / 7,
-      scrollLeft: this.carouselRef.current.offsetWidth
+      translation: this.carouselRef.current.offsetWidth / 7
     }));
+    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   scroll(dir) {
@@ -55,6 +59,7 @@ class Carousel extends Component {
   }
 
   handleScrolling() {
+    videos.forEach(x => x.pauseVideo());
     let overRide = this.state.overRide;
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
@@ -98,6 +103,8 @@ class Carousel extends Component {
 
   render() {
     const { imgs, counter, buttons, indicators } = this.props;
+    const fisrtImg = imgs[0];
+    const lastImg = imgs[imgs.length - 1];
     return (
       <div className="carouselContainer">
         <div
@@ -105,18 +112,31 @@ class Carousel extends Component {
           onScroll={this.handleScrolling}
           ref={this.carouselRef}
         >
-          <img src={imgs[imgs.length - 1].src} />
-          {imgs.map(img => {
-            return (
+          <img src={lastImg.src} />
+          {imgs.map((img, index) => {
+            return !img.id ? (
               <img
                 onLoad={() => {
                   this.scrollTo(1);
                 }}
                 src={img.src}
               />
+            ) : (
+              <Youtube
+                videoId={img.id}
+                containerClassName="videoContainer"
+                opts={{
+                  height: "100%",
+                  width: "100%",
+                  playerVars: {
+                    autoplay: this.state.index === index
+                  }
+                }}
+                onReady={e => videos.push(e.target)}
+              />
             );
           })}
-          <img src={imgs[0].src} />
+          <img src={fisrtImg.src} />
           {counter && (
             <div className="counter">
               {`${(imgs.length === this.state.index
