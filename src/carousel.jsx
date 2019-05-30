@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Youtube from "react-youtube";
 
-const videos = [];
-
 class Carousel extends Component {
   constructor(props) {
     super(props);
@@ -12,10 +10,10 @@ class Carousel extends Component {
       index: 0,
       overRide: false,
       translate: 0,
-      translation: 0,
-      videos: []
+      translation: 0
     };
 
+    this.videos = [];
     this.carouselRef = React.createRef();
     this.setCarousel = this.setCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
@@ -48,6 +46,7 @@ class Carousel extends Component {
   }
 
   scrollTo(index) {
+    console.log("here");
     this.carouselRef.current.scrollLeft =
       parseInt(this.carouselRef.current.offsetWidth) * index;
     this.setState(() => ({
@@ -59,7 +58,7 @@ class Carousel extends Component {
   }
 
   handleScrolling() {
-    videos.forEach(x => x.pauseVideo());
+    this.videos.forEach(x => x.pauseVideo());
     let overRide = this.state.overRide;
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
@@ -112,12 +111,13 @@ class Carousel extends Component {
           onScroll={this.handleScrolling}
           ref={this.carouselRef}
         >
+          <div />
           <img src={lastImg.src} />
           {imgs.map((img, index) => {
             return !img.id ? (
               <img
                 onLoad={() => {
-                  this.scrollTo(1);
+                  index === 1 && this.scrollTo(index);
                 }}
                 src={img.src}
               />
@@ -132,7 +132,7 @@ class Carousel extends Component {
                     autoplay: this.state.index === index
                   }
                 }}
-                onReady={e => videos.push(e.target)}
+                onReady={e => this.videos.push(e.target)}
               />
             );
           })}
@@ -192,8 +192,7 @@ class Carousel extends Component {
                       imgs.length > 5 ? this.state.translate : "0"
                     }px`,
                     backgroundImage: `url(${img.src})`,
-                    opacity: `${this.state.index === index ? "1" : ""}`,
-                    Animation: "indicatorsMove 1s"
+                    opacity: `${this.state.index === index ? "1" : ""}`
                   }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}

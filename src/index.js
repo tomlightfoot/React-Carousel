@@ -4,16 +4,16 @@ import Carousel from "./carousel";
 import "./styles.css";
 
 const imgs = [
-  {
-    id: "CbMjTe_d5Z8",
-    src: "https://img.youtube.com/vi/CbMjTe_d5Z8/maxresdefault.jpg",
-    type: "youtube"
-  },
-  {
-    id: "pKPCEpXsS0A",
-    src: "https://img.youtube.com/vi/pKPCEpXsS0A/maxresdefault.jpg",
-    type: "youtube"
-  },
+  // {
+  //   id: "CbMjTe_d5Z8",
+  //   src: "https://img.youtube.com/vi/CbMjTe_d5Z8/maxresdefault.jpg",
+  //   type: "youtube"
+  // },
+  // {
+  //   id: "pKPCEpXsS0A",
+  //   src: "https://img.youtube.com/vi/pKPCEpXsS0A/maxresdefault.jpg",
+  //   type: "youtube"
+  // },
   {
     id: null,
     src:
@@ -73,14 +73,7 @@ class App extends Component {
     };
   }
   render() {
-    return (
-      <div>
-        <button onClick={() => this.setState(() => ({ clicked: true }))} />
-        {this.state.clicked && (
-          <Carousel buttons indicators counter imgs={imgs} />
-        )}
-      </div>
-    );
+    return <Carousel buttons indicators counter imgs={imgs} />;
   }
 }
 
