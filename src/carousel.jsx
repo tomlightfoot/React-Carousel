@@ -48,10 +48,12 @@ class Carousel extends Component {
       1;
     if (scrollPosition === -1) this.scrollTo(this.props.imgs.length);
     if (scrollPosition === this.props.imgs.length) this.scrollTo(1);
-    this.setState({
-      index: Math.round(scrollPosition),
-      translate: this.state.translation * (3 - Math.round(scrollPosition))
-    });
+    if (Math.round(scrollPosition) !== this.state.index) {
+      this.setState({
+        index: Math.round(scrollPosition),
+        translate: this.state.translation * (3 - Math.round(scrollPosition))
+      });
+    }
   }
 
   render() {
