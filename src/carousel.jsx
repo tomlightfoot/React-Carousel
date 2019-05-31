@@ -15,28 +15,18 @@ class Carousel extends Component {
 
     this.videos = [];
     this.carouselRef = React.createRef();
-    this.setCarousel = this.setCarousel.bind(this);
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.handleScrolling = this.handleScrolling.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.setCarousel);
-    this.setCarousel();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.setCarousel);
-  }
-
-  setCarousel() {
     this.setState(() => ({
-      index: 0,
       translate: (this.carouselRef.current.offsetWidth / 7) * 3,
       translation: this.carouselRef.current.offsetWidth / 7
     }));
-    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
+    this.carouselRef.current.scrollLeft =
+      this.carouselRef.current.offsetWidth * (this.props.startPosition || 1);
   }
 
   scroll(dir) {
@@ -45,82 +35,45 @@ class Carousel extends Component {
       : (this.carouselRef.current.scrollLeft += this.carouselRef.current.offsetWidth);
   }
 
-  scrollTo(index) {
-    console.log("here");
+  scrollTo(img) {
     this.carouselRef.current.scrollLeft =
-      parseInt(this.carouselRef.current.offsetWidth) * index;
-    this.setState(() => ({
-      overRide: true,
-      translate:
-        this.state.translate +
-        this.state.translation * (this.state.index - index + 1)
-    }));
+      this.carouselRef.current.offsetWidth * img;
   }
 
   handleScrolling() {
     this.videos.forEach(x => x.pauseVideo());
-    let overRide = this.state.overRide;
     const scrollPosition =
       this.carouselRef.current.scrollLeft /
         this.carouselRef.current.offsetWidth -
       1;
-    if (scrollPosition === -1) {
-      this.scrollTo(this.props.imgs.length);
-      this.setState({
-        translate: -(this.props.imgs.length - 5) * this.state.translation
-      });
-      overRide = true;
-    }
-
-    //Number.isInteger(this.carouselRef.current.scrollLeft / this.props.imgs[0].ref.current.offsetWidth) &&
-    //  trackingHelpers.track(null, 'scroll', 'Carousel', `imgs ${scrollPosition + 1}`)
-
-    if (scrollPosition === this.props.imgs.length) {
-      this.scrollTo(1);
-      this.setState({
-        translate: (this.carouselRef.current.offsetWidth / 7) * 2
-      });
-      overRide = true;
-    }
-
-    if (!overRide) {
-      this.state.index < Math.round(scrollPosition) &&
-        this.setState({
-          translate: this.state.translate - this.state.translation
-        });
-      this.state.index > Math.round(scrollPosition) &&
-        this.setState({
-          translate: this.state.translate + this.state.translation
-        });
-    }
-
+    if (scrollPosition === -1) this.scrollTo(this.props.imgs.length);
+    if (scrollPosition === this.props.imgs.length) this.scrollTo(1);
     this.setState({
       index: Math.round(scrollPosition),
-      overRide: false
+      translate: this.state.translation * (3 - Math.round(scrollPosition))
     });
   }
 
   render() {
-    const { imgs, counter, buttons, indicators } = this.props;
+    const { imgs, counter, buttons, indicators, onClick, imgOnly } = this.props;
     const fisrtImg = imgs[0];
     const lastImg = imgs[imgs.length - 1];
     return (
       <div className="carouselContainer">
         <div
           className="carousel mb-0"
+          onClick={() => onClick(this.state.index + 1)}
           onScroll={this.handleScrolling}
           ref={this.carouselRef}
         >
-          <div />
-          <img src={lastImg.src} />
+          <div className="imgContainer">
+            <img src={lastImg.src} />
+          </div>
           {imgs.map((img, index) => {
-            return !img.id ? (
-              <img
-                onLoad={() => {
-                  index === 1 && this.scrollTo(index);
-                }}
-                src={img.src}
-              />
+            return !img.id || imgOnly ? (
+              <div className="imgContainer">
+                <img alt="Smiley face" src={img.src} />
+              </div>
             ) : (
               <Youtube
                 videoId={img.id}
@@ -129,14 +82,16 @@ class Carousel extends Component {
                   height: "100%",
                   width: "100%",
                   playerVars: {
-                    autoplay: this.state.index === index
+                    autoplay: this.props.startPosition - 1 === index && 1
                   }
                 }}
                 onReady={e => this.videos.push(e.target)}
               />
             );
           })}
-          <img src={fisrtImg.src} />
+          <div className="imgContainer">
+            <img src={fisrtImg.src} />
+          </div>
           {counter && (
             <div className="counter">
               {`${(imgs.length === this.state.index
@@ -189,7 +144,7 @@ class Carousel extends Component {
                   className="indicator"
                   style={{
                     transform: `translateX(${
-                      imgs.length > 5 ? this.state.translate : "0"
+                      imgs.length > 7 ? this.state.translate : "0"
                     }px`,
                     backgroundImage: `url(${img.src})`,
                     opacity: `${this.state.index === index ? "1" : ""}`

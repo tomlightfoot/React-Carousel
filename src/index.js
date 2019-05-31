@@ -4,16 +4,16 @@ import Carousel from "./carousel";
 import "./styles.css";
 
 const imgs = [
-  // {
-  //   id: "CbMjTe_d5Z8",
-  //   src: "https://img.youtube.com/vi/CbMjTe_d5Z8/maxresdefault.jpg",
-  //   type: "youtube"
-  // },
-  // {
-  //   id: "pKPCEpXsS0A",
-  //   src: "https://img.youtube.com/vi/pKPCEpXsS0A/maxresdefault.jpg",
-  //   type: "youtube"
-  // },
+  {
+    id: "CbMjTe_d5Z8",
+    src: "https://img.youtube.com/vi/CbMjTe_d5Z8/maxresdefault.jpg",
+    type: "youtube"
+  },
+  {
+    id: "pKPCEpXsS0A",
+    src: "https://img.youtube.com/vi/pKPCEpXsS0A/maxresdefault.jpg",
+    type: "youtube"
+  },
   {
     id: null,
     src:
@@ -69,11 +69,43 @@ class App extends Component {
     super();
 
     this.state = {
-      clicked: false
+      clicked: false,
+      modal: false,
+      carouselIndex: 0
     };
+
+    this.onClick = this.onClick.bind(this);
   }
+
+  onClick(index) {
+    this.setState(() => ({
+      modal: true,
+      carouselIndex: index
+    }));
+  }
+
   render() {
-    return <Carousel buttons indicators counter imgs={imgs} />;
+    return (
+      <div>
+        <Carousel
+          buttons
+          indicators
+          counter
+          imgOnly
+          imgs={imgs}
+          onClick={this.onClick}
+        />
+        {this.state.modal && (
+          <Carousel
+            buttons
+            indicators
+            counter
+            imgs={imgs}
+            startPosition={this.state.carouselIndex}
+          />
+        )}
+      </div>
+    );
   }
 }
 
