@@ -69,7 +69,31 @@
   transition: 0.4s;
 }
 
-.indicators {
+.pip-indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  z-index: 15;
+  width: 60%;
+  margin-left: -30%;
+  padding-left: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.pip-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  text-indent: -999px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.preview-indicators {
   margin-top: 5px;
   padding-left: 0;
   list-style: none;
@@ -79,7 +103,7 @@
   height: 10vw;
 }
 
-.indicator {
+.preview-indicator {
   display: inline-block;
   width: 14%;
   height: 100%;
@@ -90,6 +114,11 @@
   opacity: 0.7;
   background-size: cover;
   transition: 1s;
+}
+
+.active-indicator {
+  background-color: white;
+  opacity: 1;
 }
 
 .counter {

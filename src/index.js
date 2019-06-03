@@ -88,12 +88,11 @@ class App extends Component {
     return (
       <div>
         <Carousel
-          buttons
           indicators
-          counter
           imgOnly
           imgs={imgs}
           onClick={this.onClick}
+          preview={false}
         />
         {this.state.modal && (
           <Carousel
@@ -102,6 +101,7 @@ class App extends Component {
             counter
             imgs={imgs}
             startPosition={this.state.carouselIndex}
+            preview={true}
           />
         )}
       </div>

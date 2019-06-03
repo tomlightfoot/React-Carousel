@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Youtube from "react-youtube";
+import classNames from "classnames";
 
 class Carousel extends Component {
   constructor(props) {
@@ -57,7 +58,15 @@ class Carousel extends Component {
   }
 
   render() {
-    const { imgs, counter, buttons, indicators, onClick, imgOnly } = this.props;
+    const {
+      imgs,
+      counter,
+      buttons,
+      indicators,
+      onClick,
+      imgOnly,
+      preview
+    } = this.props;
     const fisrtImg = imgs[0];
     const lastImg = imgs[imgs.length - 1];
     return (
@@ -139,17 +148,23 @@ class Carousel extends Component {
           </React.Fragment>
         )}
         {indicators && (
-          <ol className="indicators" ref={this.indicatorsRef}>
+          <ol
+            className={`${preview ? "preview" : "pip"}-indicators`}
+            ref={this.indicatorsRef}
+          >
             {imgs.map((img, index) => {
+              const indicatorClassNames = classNames(
+                `${preview ? "preview" : "pip"}-indicator`,
+                { "active-indicator": this.state.index === index }
+              );
               return (
                 <li
-                  className="indicator"
+                  className={indicatorClassNames}
                   style={{
                     transform: `translateX(${
-                      imgs.length > 7 ? this.state.translate : "0"
+                      imgs.length > 7 && preview ? this.state.translate : "0"
                     }px`,
-                    backgroundImage: `url(${img.src})`,
-                    opacity: `${this.state.index === index ? "1" : ""}`
+                    backgroundImage: `${preview ? `url(${img.src})` : ""}`
                   }}
                   key={index}
                   onClick={() => this.scrollTo(index + 1)}
