@@ -19,15 +19,33 @@ class Carousel extends Component {
     this.scroll = this.scroll.bind(this);
     this.scrollTo = this.scrollTo.bind(this);
     this.handleScrolling = this.handleScrolling.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions);
     this.setState(() => ({
       translate: (this.carouselRef.current.offsetWidth / 7) * 3,
       translation: this.carouselRef.current.offsetWidth / 7
     }));
-    this.carouselRef.current.scrollLeft =
-      this.carouselRef.current.offsetWidth * (this.props.startPosition || 1);
+    setTimeout(
+      () =>
+        (this.carouselRef.current.scrollLeft =
+          this.carouselRef.current.offsetWidth *
+          (this.props.startPosition || 1))
+    );
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions() {
+    this.setState(() => ({
+      translate: (this.carouselRef.current.offsetWidth / 7) * 3,
+      translation: this.carouselRef.current.offsetWidth / 7
+    }));
+    this.carouselRef.current.scrollLeft = this.carouselRef.current.offsetWidth;
   }
 
   scroll(dir) {
