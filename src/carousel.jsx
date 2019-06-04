@@ -67,8 +67,7 @@ class Carousel extends Component {
       imgOnly,
       preview
     } = this.props;
-    const fisrtImg = imgs[0];
-    const lastImg = imgs[imgs.length - 1];
+    const imgSet = [imgs[imgs.length - 1], ...imgs, imgs[0]];
     return (
       <div className="carouselContainer">
         <div
@@ -77,10 +76,7 @@ class Carousel extends Component {
           onScroll={this.handleScrolling}
           ref={this.carouselRef}
         >
-          <div className="imgContainer">
-            <img src={lastImg.src} />
-          </div>
-          {imgs.map((img, index) => {
+          {imgSet.map((img, index) => {
             return !img.id || imgOnly ? (
               <div className="imgContainer">
                 <img alt="Smiley face" src={img.src} />
@@ -100,9 +96,6 @@ class Carousel extends Component {
               />
             );
           })}
-          <div className="imgContainer">
-            <img src={fisrtImg.src} />
-          </div>
           {counter && (
             <div className="counter">
               {`${(imgs.length === this.state.index
