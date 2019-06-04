@@ -7,7 +7,7 @@ const imgs = [
   {
     id: "CbMjTe_d5Z8",
     src: "https://img.youtube.com/vi/CbMjTe_d5Z8/maxresdefault.jpg",
-    type: "youtube"
+    type: "video"
   },
   {
     id: "pKPCEpXsS0A",

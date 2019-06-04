@@ -83,9 +83,11 @@ class Carousel extends Component {
       indicators,
       onClick,
       imgOnly,
-      preview
+      preview,
+      startPosition
     } = this.props;
-    const imgSet = [imgs[imgs.length - 1], ...imgs, imgs[0]];
+    const fisrtImg = imgs[0];
+    const lastImg = imgs[imgs.length - 1];
     return (
       <div className="carouselContainer">
         <div
@@ -93,8 +95,12 @@ class Carousel extends Component {
           onClick={() => onClick(this.state.index + 1)}
           onScroll={this.handleScrolling}
           ref={this.carouselRef}
+          style={{ overflowX: `${imgs.length === 1 ? "hidden" : ""}` }}
         >
-          {imgSet.map((img, index) => {
+          <div className="imgContainer">
+            <img src={lastImg.src} />
+          </div>
+          {imgs.map((img, index) => {
             return !img.id || imgOnly ? (
               <div className="imgContainer">
                 <img alt="Smiley face" src={img.src} />
@@ -107,24 +113,19 @@ class Carousel extends Component {
                   height: "100%",
                   width: "100%",
                   playerVars: {
-                    autoplay: this.props.startPosition - 1 === index && 1
+                    autoplay:
+                      (startPosition - 1 === index || imgs.length === 1) && 1
                   }
                 }}
                 onReady={e => this.videos.push(e.target)}
               />
             );
           })}
-          {counter && (
-            <div className="counter">
-              {`${(imgs.length === this.state.index
-                ? imgs.length - 1
-                : this.state.index < 1
-                ? 0
-                : this.state.index) + 1} of ${imgs.length}`}
-            </div>
-          )}
+          <div className="imgContainer">
+            <img src={fisrtImg.src} />
+          </div>
         </div>
-        {buttons && (
+        {buttons && imgs.length > 1 && (
           <React.Fragment>
             <label className="left" onClick={() => this.scroll("left")}>
               <svg
@@ -158,7 +159,16 @@ class Carousel extends Component {
             </label>
           </React.Fragment>
         )}
-        {indicators && (
+        {counter && imgs.length > 1 && (
+          <div className="counter">
+            {`${(imgs.length === this.state.index
+              ? imgs.length - 1
+              : this.state.index < 1
+              ? 0
+              : this.state.index) + 1} of ${imgs.length}`}
+          </div>
+        )}
+        {indicators && imgs.length > 1 && (
           <ol
             className={`${preview ? "preview" : "pip"}-indicators`}
             ref={this.indicatorsRef}
